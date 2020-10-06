@@ -71,12 +71,18 @@ docker run -d --name playmaker \
     -e LANG_LOCALE="de_DE" \
     -e LANG_TIMEZONE="Europe/Berlin" \
     -e DEVICE_CODE="hammerhead" \
-    fellek/playmaker:fellek
+    grea09/playmaker
 ```
 
 If you want to run it in a virtualenv rather than using docker, remember that you need to install fdroidserver,
 android SDK and define the ANDROID\_HOME env variable (see the Dockerfile as a reference).
 Instruction on how to install fdroidserver [here](https://f-droid.org/docs/Installing_the_Server_and_Repo_Tools/)
+
+## Security
+
+Your repository must have a valid signature. To generate one you must run `docker exec -it playmaker "fdroid update -c --create-key"`. 
+
+This will create a key storage in the `/data/fdroid/keystore.jks` file. At this point sensitive informations are stored into this file along with the `config.py` file which must be stored in a secured place. Anyone with access to this files could usurp the identity of your repository or forge its APKs.
 
 ## Alternatives
 
