@@ -24,7 +24,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists
 
 RUN wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip \
-    && echo "89f308315e041c93a37a79e0627c47f21d5c5edbe5e80ea8dc0aac8a649e0e92 	commandlinetools-linux-6609375_latest.zip" | sha256sum -c \
     && unzip commandlinetools-linux-6609375_latest.zip \
     && rm commandlinetools-linux-6609375_latest.zip
 
@@ -41,12 +40,14 @@ RUN echo 'y' | rm -rf tools
 RUN mkdir -p /data/fdroid/repo && \
     mkdir -p /opt/playmaker
 
+WORKDIR /opt/playmaker
+
 COPY README.md setup.py pm-server /opt/playmaker/
 COPY playmaker /opt/playmaker/playmaker
 
-WORKDIR /opt/playmaker
-RUN pip3 install . && \
-    cd /opt && rm -rf playmaker
+
+RUN pip3 install . #&& \
+    #cd /opt && rm -rf playmaker
 
 #RUN pip3 install fdroidserver
 RUN pip3 install Cython && \
