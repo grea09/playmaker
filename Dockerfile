@@ -46,24 +46,26 @@ COPY README.md setup.py pm-server /opt/playmaker/
 COPY playmaker /opt/playmaker/playmaker
 
 
-RUN pip3 install . #&& \
+RUN pip3 install .
     #cd /opt && rm -rf playmaker
 
-#RUN pip3 install fdroidserver
+RUN pip3 install fdroidserver
 RUN pip3 install Cython && \
-	pip3 install fdroidserver && \
     pip3 install . && \
-    cd /opt && rm -rf playmaker && \
-    sed -i 's/\"sdk_version\"/#\"sdk_version\"/g' /usr/local/lib/python3.8/site-packages/gpapi/config.py
+    cd /opt && rm -rf playmaker
 
 RUN groupadd -g 999 pmuser && \
     useradd -m -u 999 -g pmuser pmuser
 RUN chown -R pmuser:pmuser /data/fdroid && \
     chown -R pmuser:pmuser /opt/playmaker
+RUN mkdir -p /usr/local/share/doc/fdroidserver/
+RUN ln -s /data/fdroid /usr/local/share/doc/fdroidserver/examples
 USER pmuser
 
 VOLUME /data/fdroid
 WORKDIR /data/fdroid
+RUN touch /data/fdroid/fdroid-icon.png
+RUN touch /data/fdroid/config.py
 
 EXPOSE 5000
 ENTRYPOINT python3 -u /usr/local/bin/pm-server --fdroid --debug
